@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue'; // Importez le plugin Vue
+import vue from '@vitejs/plugin-vue';
 
-// Configuration de Vite
 export default defineConfig({
-  plugins: [vue()] // Utilisez le plugin Vue
+  plugins: [vue()],
+  base: '/B3-Ymmersion/'
 });
