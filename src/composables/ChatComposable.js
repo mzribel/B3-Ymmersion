@@ -273,6 +273,27 @@ const ChatComposable = () => {
       }
     }
 
+    const MarkUserAsTyping = async (conversationID, userID) => {
+        const typingRef = fbRef(db, `conversations/${conversationID}/typing/${userID}`);
+        await set(typingRef, { isTyping: true });
+        setTimeout(() => {
+            RemoveUserFromTyping(conversationID, userID);
+        }, 5000); // Clears typing status after 5 seconds of inactivity
+    };
+
+    const RemoveUserFromTyping = async (conversationID, userID) => {
+        const typingRef = fbRef(db, `conversations/${conversationID}/typing/${userID}`);
+        await remove(typingRef);
+    };
+
+    const GetTypingUsers = (conversationID, callback) => {
+        const typingRef = ref(db, `conversations/${conversationID}/typing`);
+        onValue(typingRef, (snapshot) => {
+            const typingUsers = snapshot.val() || {};
+            callback(typingUsers);
+        });
+    };
+
 
     return {
         GetConversationByID,
@@ -289,7 +310,10 @@ const ChatComposable = () => {
         UpdateMessageInConversation, DeleteMessageFromConversation,
         GetGroupsIncludingUsers,
         AddUserEmailToGroupConversation,
-        OpenPrivateMessageWithUser
+        OpenPrivateMessageWithUser,
+        MarkUserAsTyping, // Added here
+        RemoveUserFromTyping, // Added here
+        GetTypingUsers // Added here
     }
 }
 

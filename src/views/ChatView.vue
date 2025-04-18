@@ -33,13 +33,13 @@ const otherUser = ref({})
 const conversation = ref(null);
 onAuthStateChanged(getAuth(), async (u) => {
   if (chatID.value) {
-      await loadConversationData();
-      createConversationListeners();
+    await loadConversationData();
+    createConversationListeners();
   };
 })
 
 onMounted(async()=>{
-   user.value = await GetUserByID(userID.value)
+  user.value = await GetUserByID(userID.value)
 })
 
 watch(() => route.params, async () => {
@@ -51,22 +51,22 @@ watch(() => route.params, async () => {
 })
 
 function createConversationListeners() {
-    onValue(fbRef(db, `conversations/${chatID.value}/members`), async (snapshot) => {
-      loadMembers(snapshot.val()).then(result=> {
-        conversationMembers.value = result;
-      })
-    });
+  onValue(fbRef(db, `conversations/${chatID.value}/members`), async (snapshot) => {
+    loadMembers(snapshot.val()).then(result=> {
+      conversationMembers.value = result;
+    })
+  });
 
   // Messages
-    onValue(fbRef(db, `conversations/${chatID.value}/messages`), (snapshot) => {
-      conversationMessages.value = snapshot.val() ? ToArray(snapshot.val()) : [];
-    });
+  onValue(fbRef(db, `conversations/${chatID.value}/messages`), (snapshot) => {
+    conversationMessages.value = snapshot.val() ? ToArray(snapshot.val()) : [];
+  });
   // Title
-    if (!conversation.isPrivate) {
-      onValue(fbRef(db, `conversations/${chatID.value}/groupName`), (snapshot) => {
-        conversationTitle.value = snapshot.val();
-      });
-    }
+  if (!conversation.isPrivate) {
+    onValue(fbRef(db, `conversations/${chatID.value}/groupName`), (snapshot) => {
+      conversationTitle.value = snapshot.val();
+    });
+  }
 
 }
 
@@ -111,18 +111,18 @@ async function loadConversationData() {
 </script>
 
 <template>
-<main class="chat-view">
-  <ConversationsList :conversation-i-d="chatID"></ConversationsList>
-  <template v-if="chatID && conversation">
+  <main class="chat-view">
+    <ConversationsList :conversation-i-d="chatID"></ConversationsList>
+    <template v-if="chatID && conversation">
       <Chat :conversation-title="conversationTitle" :other-user="otherUser" :conversation-messages="conversationMessages" :conversation-members="conversationMembers"></Chat>
       <GroupConvDetails :conversation-i-d="conversation.uid" :conversation-title="conversationTitle" :conversation-members="conversationMembers" :conversation-owners="conversation.ownerID" v-if="!conversationIsPrivate"></GroupConvDetails>
       <PrivateConvDetails :other-user="otherUser" :conversation-members="conversationMembers" v-else-if="conversationIsPrivate && conversationMembers"></PrivateConvDetails>
-  </template>
-  <template v-else>
-    <Hero></Hero>
-    <AllUsers></AllUsers>
-  </template>
-</main>
+    </template>
+    <template v-else>
+      <Hero></Hero>
+      <AllUsers></AllUsers>
+    </template>
+  </main>
 </template>
 
 <style scoped>
