@@ -19,12 +19,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd Projet-Memory
           npm install
 
       - name: Build the app
         run: |
-          cd Projet-Memory
           npm run build
 
       - name: Deploy to GitHub Pages
